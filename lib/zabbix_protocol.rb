@@ -17,6 +17,7 @@ module ZabbixProtocol
       data = MultiJson.dump(data)
     else
       data = data.to_s
+      data << "\n" unless data =~ /\n\z/
     end
 
     [
@@ -33,7 +34,7 @@ module ZabbixProtocol
     end
 
     if res_data.length < MIN_RESPONSE_LEN
-      raise Error, "response data is too short: len=#{res_data.length} < #{MIN_RESPONSE_LEN}"
+      raise Error, "response data is too short"
     end
 
     data = res_data.dup
