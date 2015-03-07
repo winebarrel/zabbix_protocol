@@ -4,6 +4,9 @@ Zabbix protocols builder/parser.
 
 see http://www.zabbix.org/wiki/Docs/protocols
 
+[![Gem Version](https://badge.fury.io/rb/zabbix_protocol.svg)](http://badge.fury.io/rb/zabbix_protocol)
+[![Build Status](https://travis-ci.org/winebarrel/zabbix_protocol.svg?branch=master)](https://travis-ci.org/winebarrel/zabbix_protocol)
+
 ## Installation
 
 Add this line to your application's Gemfile:
