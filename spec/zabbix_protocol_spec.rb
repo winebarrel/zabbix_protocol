@@ -4,8 +4,8 @@ describe ZabbixProtocol do
   context "when request" do
     it "should convert string to zabbix request" do
       res = subject.dump("system.cpu.load[all,avg1]")
-      expect(res).to eq "ZBXD\x01\x1A\x00\x00\x00\x00\x00\x00\x00" +
-       "system.cpu.load[all,avg1]\n"
+      expect(res).to eq "ZBXD\x01\x19\x00\x00\x00\x00\x00\x00\x00" +
+       "system.cpu.load[all,avg1]"
     end
 
     it "should convert hash to zabbix request" do

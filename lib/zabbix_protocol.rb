@@ -6,23 +6,22 @@ module ZabbixProtocol
   class Error < StandardError; end
 
   # http://www.zabbix.org/wiki/Docs/protocols/zabbix_agent/1.4
-  HEADER  = "ZBXD"
-  VERSION = "\x01"
+  ZABBIX_HEADER  = "ZBXD"
+  ZABBIX_VERSION = "\x01"
   DATA_LEN_BYTES = 8
 
-  MIN_RESPONSE_LEN = HEADER.length + VERSION.length + DATA_LEN_BYTES
+  MIN_RESPONSE_LEN = ZABBIX_HEADER.length + ZABBIX_VERSION.length + DATA_LEN_BYTES
 
   def self.dump(data)
     if data.is_a?(Hash)
       data = MultiJson.dump(data)
     else
       data = data.to_s
-      data << "\n" unless data =~ /\n\z/
     end
 
     [
-      HEADER,
-      VERSION,
+      ZABBIX_HEADER,
+      ZABBIX_VERSION,
       [data.length].pack('Q'),
       data
     ].join
@@ -38,15 +37,15 @@ module ZabbixProtocol
     end
 
     data = res_data.dup
-    header = data.slice!(0, HEADER.length)
+    header = data.slice!(0, ZABBIX_HEADER.length)
 
-    if header != HEADER
+    if header != ZABBIX_HEADER
       raise Error, "invalid header: #{header.inspect}"
     end
 
-    version = data.slice!(0, VERSION.length)
+    version = data.slice!(0, ZABBIX_VERSION.length)
 
-    if version != VERSION
+    if version != ZABBIX_VERSION
       raise Error, "unsupported version: #{version.inspect}"
     end
 
