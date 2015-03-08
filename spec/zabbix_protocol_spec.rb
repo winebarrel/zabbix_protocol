@@ -48,21 +48,21 @@ describe ZabbixProtocol do
     it "raise error when response is too short string" do
       expect {
         subject.load("x")
-      }.to raise_error "response data is too short"
+      }.to raise_error 'data length is too short (data: "x")'
     end
 
     it "raise error when unsupported version" do
       expect {
         res_data = "ZBXD\x02\b\x00\x00\x00\x00\x00\x00\x001.000000"
         subject.load(res_data)
-      }.to raise_error 'unsupported version: "\\u0002"'
+      }.to raise_error 'unsupported version: "\\u0002" (data: "\b\u0000\u0000\u0000\u0000\u0000\u0000\u00001.000000")'
     end
 
     it "raise error when invalid data length" do
       expect {
         res_data = "ZBXD\x01\x00\x00\x00\x00\x00\x00\x00\x001.000000"
         subject.load(res_data)
-      }.to raise_error "invalid data length: expected=0, actual=8"
+      }.to raise_error 'invalid data length: expected=0, actual=8 (data: "1.000000")'
     end
   end
 end
