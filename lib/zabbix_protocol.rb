@@ -59,7 +59,7 @@ module ZabbixProtocol
     begin
       MultiJson.load(sliced)
     rescue MultiJson::ParseError
-      data
+      sliced
     end
   end
 end
