@@ -64,5 +64,11 @@ describe ZabbixProtocol do
         subject.load(res_data)
       }.to raise_error 'invalid payload length: expected=0, actual=8 (data: "ZBXD\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u00001.000000")'
     end
+
+    it "should parse error message" do
+      res_data = "ZBXD\x01*\x00\x00\x00\x00\x00\x00\x00ZBX_NOTSUPPORTED\x00Invalid second parameter."
+      data = subject.load(res_data)
+      expect(data).to eq "ZBX_NOTSUPPORTED\x00Invalid second parameter."
+    end
   end
 end
