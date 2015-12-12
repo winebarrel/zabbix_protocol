@@ -1,5 +1,4 @@
 require "multi_json"
-
 require "zabbix_protocol/version"
 
 module ZabbixProtocol
