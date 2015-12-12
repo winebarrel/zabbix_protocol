@@ -64,7 +64,6 @@ describe ZabbixProtocol do
       res_data = "ZBXD\x01\x0f\x00\x00\x00\x00\x00\x00\x00response-string"
       data = subject.load(res_data)
       expect(data).to eq("response-string")
-      expect(data.encoding).to eq __ENCODING__
     end
   end
 
