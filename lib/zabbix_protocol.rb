@@ -33,6 +33,7 @@ module ZabbixProtocol
       raise TypeError, "wrong argument type #{data.class} (expected String)"
     end
 
+    original_encoding = data.encoding
     data = data.dup
     data.force_encoding('ASCII-8BIT')
 
@@ -63,7 +64,7 @@ module ZabbixProtocol
     duplicated = sliced.dup
 
     begin
-      duplicated.force_encoding(__ENCODING__)
+      duplicated.force_encoding(original_encoding)
       sliced = duplicated
     rescue
       # XXX: nothing to do
