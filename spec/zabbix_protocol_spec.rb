@@ -59,6 +59,13 @@ describe ZabbixProtocol do
       data = subject.load(res_data)
       expect(data).to eq({"response"=>"success", "data"=>[]})
     end
+
+    it "should parse string" do
+      res_data = "ZBXD\x01\x0f\x00\x00\x00\x00\x00\x00\x00response-string"
+      data = subject.load(res_data)
+      expect(data).to eq("response-string")
+      expect(data.encoding).to eq Encoding::UTF_8
+    end
   end
 
   context "when error happen" do

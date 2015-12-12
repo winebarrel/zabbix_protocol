@@ -60,6 +60,15 @@ module ZabbixProtocol
       raise Error, "invalid payload length: expected=#{payload_len}, actual=#{sliced.bytesize} (data: #{data.inspect})"
     end
 
+    duplicated = sliced.dup
+
+    begin
+      duplicated.force_encoding(__ENCODING__)
+      sliced = duplicated
+    rescue
+      # XXX: nothing to do
+    end
+
     begin
       MultiJson.load(sliced)
     rescue MultiJson::ParseError
