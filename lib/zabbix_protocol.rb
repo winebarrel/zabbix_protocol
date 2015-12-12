@@ -32,6 +32,9 @@ module ZabbixProtocol
       raise TypeError, "wrong argument type #{data.class} (expected String)"
     end
 
+    data = data.dup
+    data.force_encoding('ASCII-8BIT')
+
     if data.length < MIN_DATA_LEN
       raise Error, "data length is too short (data: #{data.inspect})"
     end

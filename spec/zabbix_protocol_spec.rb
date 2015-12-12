@@ -55,14 +55,14 @@ describe ZabbixProtocol do
       expect {
         res_data = "ZBXD\x02\b\x00\x00\x00\x00\x00\x00\x001.000000"
         subject.load(res_data)
-      }.to raise_error 'unsupported version: "\u0002" (data: "ZBXD\u0002\b\u0000\u0000\u0000\u0000\u0000\u0000\u00001.000000")'
+      }.to raise_error 'unsupported version: "\x02" (data: "ZBXD\x02\b\x00\x00\x00\x00\x00\x00\x001.000000")'
     end
 
     it "raise error when invalid payload length" do
       expect {
         res_data = "ZBXD\x01\x00\x00\x00\x00\x00\x00\x00\x001.000000"
         subject.load(res_data)
-      }.to raise_error 'invalid payload length: expected=0, actual=8 (data: "ZBXD\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u00001.000000")'
+      }.to raise_error 'invalid payload length: expected=0, actual=8 (data: "ZBXD\x01\x00\x00\x00\x00\x00\x00\x00\x001.000000")'
     end
 
     it "should parse error message" do
