@@ -1,3 +1,5 @@
+# coding: utf-8
+
 describe ZabbixProtocol do
   subject { described_class }
 
@@ -21,6 +23,27 @@ describe ZabbixProtocol do
       res = subject.dump(req_data)
       expect(res).to eq "ZBXD\x01Z\x00\x00\x00\x00\x00\x00\x00" +
         '{"request":"sender.data","data":[{"host":"LinuxDB3","key":"db.connections","value":"43"}]}'
+    end
+
+    context "when multibyte character" do
+      it "should convert hash to zabbix request" do
+        req_data = {
+          "request" => "sender.data",
+          "data" => [{
+            "host" => "LinuxDB3",
+            "key" => "multibyte.item",
+            "value" => "ййццууккееннггшшщщ"
+          }]
+        }
+
+        res = subject.dump(req_data)
+
+        expected = "ZBXD\x01|\x00\x00\x00\x00\x00\x00\x00" +
+          %!{"request":"sender.data","data":[{"host":"LinuxDB3","key":"multibyte.item","value":"\xD0\xB9\xD0\xB9\xD1\x86\xD1\x86\xD1\x83\xD1\x83\xD0\xBA\xD0\xBA\xD0\xB5\xD0\xB5\xD0\xBD\xD0\xBD\xD0\xB3\xD0\xB3\xD1\x88\xD1\x88\xD1\x89\xD1\x89"}]}!
+        expected.force_encoding('ASCII-8BIT')
+
+        expect(res).to eq expected
+      end
     end
   end
 

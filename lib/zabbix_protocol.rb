@@ -10,7 +10,7 @@ module ZabbixProtocol
   ZABBIX_VERSION = "\x01"
   PAYLOAD_LEN_BYTES = 8
 
-  MIN_DATA_LEN = ZABBIX_HEADER.length + ZABBIX_VERSION.length + PAYLOAD_LEN_BYTES
+  MIN_DATA_LEN = ZABBIX_HEADER.bytesize + ZABBIX_VERSION.bytesize + PAYLOAD_LEN_BYTES
 
   def self.dump(payload)
     if payload.is_a?(Hash)
@@ -19,10 +19,12 @@ module ZabbixProtocol
       payload = payload.to_s
     end
 
+    payload.force_encoding('ASCII-8BIT')
+
     [
       ZABBIX_HEADER,
       ZABBIX_VERSION,
-      [payload.length].pack('Q'),
+      [payload.bytesize].pack('Q'),
       payload
     ].join
   end
@@ -35,18 +37,18 @@ module ZabbixProtocol
     data = data.dup
     data.force_encoding('ASCII-8BIT')
 
-    if data.length < MIN_DATA_LEN
+    if data.bytesize < MIN_DATA_LEN
       raise Error, "data length is too short (data: #{data.inspect})"
     end
 
     sliced = data.dup
-    header = sliced.slice!(0, ZABBIX_HEADER.length)
+    header = sliced.slice!(0, ZABBIX_HEADER.bytesize)
 
     if header != ZABBIX_HEADER
       raise Error, "invalid header: #{header.inspect} (data: #{data.inspect})"
     end
 
-    version = sliced.slice!(0, ZABBIX_VERSION.length)
+    version = sliced.slice!(0, ZABBIX_VERSION.bytesize)
 
     if version != ZABBIX_VERSION
       raise Error, "unsupported version: #{version.inspect} (data: #{data.inspect})"
@@ -55,8 +57,8 @@ module ZabbixProtocol
     payload_len = sliced.slice!(0, PAYLOAD_LEN_BYTES)
     payload_len = payload_len.unpack("Q").first
 
-    if payload_len != sliced.length
-      raise Error, "invalid payload length: expected=#{payload_len}, actual=#{sliced.length} (data: #{data.inspect})"
+    if payload_len != sliced.bytesize
+      raise Error, "invalid payload length: expected=#{payload_len}, actual=#{sliced.bytesize} (data: #{data.inspect})"
     end
 
     begin
