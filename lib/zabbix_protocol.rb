@@ -23,7 +23,7 @@ module ZabbixProtocol
     [
       ZABBIX_HEADER,
       ZABBIX_VERSION,
-      [payload.bytesize].pack('Q'),
+      [payload.bytesize].pack('Q<'),
       payload
     ].join
   end
@@ -55,7 +55,7 @@ module ZabbixProtocol
     end
 
     payload_len = sliced.slice!(0, PAYLOAD_LEN_BYTES)
-    payload_len = payload_len.unpack("Q").first
+    payload_len = payload_len.unpack('Q<').first
 
     if payload_len != sliced.bytesize
       raise Error, "invalid payload length: expected=#{payload_len}, actual=#{sliced.bytesize} (data: #{data.inspect})"
